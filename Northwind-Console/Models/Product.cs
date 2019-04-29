@@ -1,12 +1,18 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace NorthwindConsole.Models
 {
+
+
     public class Product
     {
         public int ProductID { get; set; }
+        [Required(ErrorMessage = "ENTER THE NAME!")]
         public string ProductName { get; set; }
+        [Required(ErrorMessage = "ENTER QUANTITY PER UNIT")]
         public string QuantityPerUnit { get; set; }
+        [Required(ErrorMessage = "ENTER UNIT PRICE")]
         public decimal? UnitPrice { get; set; }
         public Int16? UnitsInStock { get; set; }
         public Int16? UnitsOnOrder { get; set; }

@@ -66,6 +66,7 @@
     </None>
     <None Include="App.config.txt" />
     <None Include="app.config" />
+    <None Include="Instructions.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
