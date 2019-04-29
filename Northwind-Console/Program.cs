@@ -101,7 +101,7 @@ namespace NorthwindConsole
 
                         var isProductValid = false;
 
-                        if (db.Products.Any(p => p.ProductName == product.ProductName))
+                        if (db.Products.Any(p => p.ProductName.ToLower() == product.ProductName))
                         {
                             isProductValid = false;
                         }
