@@ -13,14 +13,133 @@ namespace NorthwindConsole
             logger.Info("Program started");
             try
             {
+
+
                 string choice;
                 do
                 {
-                    Console.Clear();
-                    Console.WriteLine("1) Display Categories");
-                    Console.WriteLine("2) Add Category");
+                    //Console.Clear();
+                    Console.WriteLine("1) Add Product");
+                    Console.WriteLine("2) Display all Products");
+                    //Console.WriteLine("2) Add Category");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
+
+
+
+                    if (choice == "1")
+                    {
+
+                        var db = new NorthwindContext();
+
+                        Product product = new Product();
+
+                        logger.Info("Choice: Add new product");
+                        Console.WriteLine("Enter product name: ");
+                        product.ProductName = Console.ReadLine().ToLower();
+                        Console.WriteLine("Enter Quantity per unit: ");
+                        product.QuantityPerUnit = Console.ReadLine();
+
+
+
+                        Console.WriteLine("Enter unit price: ");
+
+                        Decimal unitPrice = Decimal.Parse(Console.ReadLine());
+                        product.UnitPrice = unitPrice;
+
+
+
+                        Console.WriteLine("Enter units in stock: ");
+                        Int16 unitsInStock = Int16.Parse(Console.ReadLine());
+                        product.UnitsInStock = unitsInStock;
+
+                        Console.WriteLine("Enter units on order: ");
+                        Int16 unitsOnOrder = Int16.Parse(Console.ReadLine());
+                        product.UnitsOnOrder = unitsOnOrder;
+
+                        Console.WriteLine("Enter reorder level: ");
+                        Int16 reorderLevel = Int16.Parse(Console.ReadLine());
+                        product.ReorderLevel = reorderLevel;
+
+                        Console.WriteLine("Enter Discontinued Y/N");
+                        bool discontinued;
+
+                        if (Console.ReadLine().Equals("T"))
+                        {
+                            discontinued = true;
+                            product.Discontinued = discontinued;
+                        }
+                        else
+                        {
+                            discontinued = false;
+                            product.Discontinued = discontinued;
+                        }
+
+                        Console.WriteLine("Enter Category Name: ");
+                        var categoryName = Console.ReadLine().ToLower();
+                        var categoryQuery = db.Categories.Where(c => c.CategoryName.Equals(categoryName));
+                        var categoryID = 0;
+
+                        foreach (var ca in categoryQuery)
+                        {
+                            categoryID = ca.CategoryId;
+                        }
+
+                        product.CategoryId = categoryID;
+
+                        Console.WriteLine("Enter Supplier name: ");
+                        var supplierName = Console.ReadLine();
+                        var supplierQuery = db.Suppliers.Where(s => s.CompanyName.Equals(supplierName));
+                        var supplierID = 0;
+
+                        foreach (var s in supplierQuery)
+                        {
+                            supplierID = s.SupplierId;
+                        }
+
+                        product.SupplierId = supplierID;
+
+                        var isProductValid = false;
+
+                        if (db.Products.Any(p => p.ProductName == product.ProductName))
+                        {
+                            isProductValid = false;
+                        }
+                        else
+                        {
+                            isProductValid = true;
+                        }
+
+
+
+                        if (isProductValid)
+                        {
+                            db.addProduct(product);
+                            logger.Info($"Product {product.ProductName} added");
+                        }
+                        else
+                        {
+                            logger.Error("Product already exists");
+                        }
+
+                    }
+                    else if (choice == "2")
+                    {
+
+                        logger.Info("Choice: Display all products");
+                        var db = new NorthwindContext();
+
+                        var productQuery = db.Products.OrderBy(p => p.ProductID);
+
+                        foreach (var p in productQuery)
+                        {
+                            Console.WriteLine($"ID: {p.ProductID}");
+                            Console.WriteLine($"Name: {p.ProductName}");
+                            Console.WriteLine("\n");
+                        }
+                    }
+
+
 
                 } while (choice.ToLower() != "q");
             }
