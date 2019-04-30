@@ -23,6 +23,7 @@ namespace NorthwindConsole
                     Console.WriteLine("2) Display all Products");
                     Console.WriteLine("3) Display Active Products");
                     Console.WriteLine("4) Display Discontinued Products");
+                    Console.WriteLine("5) Search Products");
                     //Console.WriteLine("2) Add Category");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
@@ -151,7 +152,7 @@ namespace NorthwindConsole
                         Console.WriteLine("-----------------------");
 
                         var ProductQuery = db.Products.Where(p => p.Discontinued == false);
-                        logger.Info(ProductQuery.Count());
+
 
                         foreach (var p in ProductQuery)
                         {
@@ -174,7 +175,7 @@ namespace NorthwindConsole
                         Console.WriteLine("-----------------------");
 
                         var ProductQuery = db.Products.Where(p => p.Discontinued == true);
-                        logger.Info(ProductQuery.Count());
+
 
                         foreach (var p in ProductQuery)
                         {
@@ -185,6 +186,44 @@ namespace NorthwindConsole
                         Console.WriteLine("\n\nPress any key to return to menu");
                         Console.ReadLine();
                     }
+                    else if (choice == "5")
+                    {
+
+                        logger.Info("Choice: Search Products");
+                        var db = new NorthwindContext();
+
+                        Console.WriteLine("Enter product name: ");
+                        string name = Console.ReadLine().ToLower();
+
+
+                        var searchProduct = db.Products.Where(p => p.ProductName.Equals(name));
+
+                        if (searchProduct.Any())
+                        {
+
+                            Console.WriteLine($"Search Resuts for {name.ToUpper()}");
+                            foreach (var p in searchProduct)
+                            {
+                                Console.WriteLine($"Id: {p.ProductID}");
+                                Console.WriteLine($"Quantity Per Unit: {p.QuantityPerUnit}");
+                                Console.WriteLine($"Unit Price: {p.UnitPrice}");
+                                Console.WriteLine($"Units In Stock: {p.UnitsInStock}");
+                                Console.WriteLine($"Units On Order: {p.UnitsOnOrder}");
+                                Console.WriteLine($"Reorder Level: {p.ReorderLevel}");
+                                Console.WriteLine($"Discontinued: {p.Discontinued}");
+                                Console.WriteLine("---------------------");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"There were {searchProduct.Count()} products that matched \"{name.ToUpper()}\"");
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine("Press any key to return to menu");
+                        Console.ReadLine();
+                    }
+
+
 
 
 
