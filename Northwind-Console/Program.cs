@@ -18,12 +18,16 @@ namespace NorthwindConsole
                 string choice;
                 do
                 {
-                    //Console.Clear();
+                    Console.Clear();
                     Console.WriteLine("1) Add Product");
                     Console.WriteLine("2) Display all Products");
+                    Console.WriteLine("3) Display Active Products");
+                    Console.WriteLine("4) Display Discontinued Products");
                     //Console.WriteLine("2) Add Category");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
+
+
 
 
 
@@ -99,17 +103,12 @@ namespace NorthwindConsole
 
                         product.SupplierId = supplierID;
 
-                        var isProductValid = false;
+                        var isProductValid = true;
 
                         if (db.Products.Any(p => p.ProductName.ToLower() == product.ProductName))
                         {
                             isProductValid = false;
                         }
-                        else
-                        {
-                            isProductValid = true;
-                        }
-
 
 
                         if (isProductValid)
@@ -117,7 +116,7 @@ namespace NorthwindConsole
                             db.addProduct(product);
                             logger.Info($"Product {product.ProductName} added");
                         }
-                        else
+                        else if (!isProductValid)
                         {
                             logger.Error("Product already exists");
                         }
@@ -130,13 +129,61 @@ namespace NorthwindConsole
                         var db = new NorthwindContext();
 
                         var productQuery = db.Products.OrderBy(p => p.ProductID);
-
+                        logger.Info(productQuery.Count());
                         foreach (var p in productQuery)
                         {
-                            Console.WriteLine($"ID: {p.ProductID}");
-                            Console.WriteLine($"Name: {p.ProductName}");
-                            Console.WriteLine("\n");
+                            Console.WriteLine($"{p.ProductName}");
+
                         }
+
+                        Console.WriteLine("\n\nPress any key to return to menu");
+                        Console.ReadLine();
+
+
+                    }
+                    else if (choice == "3")
+                    {
+
+                        logger.Info("Choice: Display Active Products");
+                        var db = new NorthwindContext();
+
+                        Console.WriteLine("Active Products");
+                        Console.WriteLine("-----------------------");
+
+                        var ProductQuery = db.Products.Where(p => p.Discontinued == false);
+                        logger.Info(ProductQuery.Count());
+
+                        foreach (var p in ProductQuery)
+                        {
+
+                            Console.WriteLine($"{p.ProductName}");
+                        }
+
+                        Console.WriteLine("\n\nPress any key to return to menu");
+                        Console.ReadLine();
+
+
+                    }
+                    else if (choice == "4")
+                    {
+
+                        logger.Info("Choice: Display Active Products");
+                        var db = new NorthwindContext();
+
+                        Console.WriteLine("Discontinued Products");
+                        Console.WriteLine("-----------------------");
+
+                        var ProductQuery = db.Products.Where(p => p.Discontinued == true);
+                        logger.Info(ProductQuery.Count());
+
+                        foreach (var p in ProductQuery)
+                        {
+
+                            Console.WriteLine($"{p.ProductName}");
+                        }
+
+                        Console.WriteLine("\n\nPress any key to return to menu");
+                        Console.ReadLine();
                     }
 
 
