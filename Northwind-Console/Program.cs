@@ -28,202 +28,222 @@ namespace NorthwindConsole
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
 
-
-
-
-
-                    if (choice == "1")
+                    switch (choice)
                     {
-
-                        var db = new NorthwindContext();
-
-                        Product product = new Product();
-
-                        logger.Info("Choice: Add new product");
-                        Console.WriteLine("Enter product name: ");
-                        product.ProductName = Console.ReadLine().ToLower();
-                        Console.WriteLine("Enter Quantity per unit: ");
-                        product.QuantityPerUnit = Console.ReadLine();
-
-
-
-                        Console.WriteLine("Enter unit price: ");
-
-                        Decimal unitPrice = Decimal.Parse(Console.ReadLine());
-                        product.UnitPrice = unitPrice;
-
-
-
-                        Console.WriteLine("Enter units in stock: ");
-                        Int16 unitsInStock = Int16.Parse(Console.ReadLine());
-                        product.UnitsInStock = unitsInStock;
-
-                        Console.WriteLine("Enter units on order: ");
-                        Int16 unitsOnOrder = Int16.Parse(Console.ReadLine());
-                        product.UnitsOnOrder = unitsOnOrder;
-
-                        Console.WriteLine("Enter reorder level: ");
-                        Int16 reorderLevel = Int16.Parse(Console.ReadLine());
-                        product.ReorderLevel = reorderLevel;
-
-                        Console.WriteLine("Enter Discontinued Y/N");
-                        bool discontinued;
-
-                        if (Console.ReadLine().Equals("T"))
-                        {
-                            discontinued = true;
-                            product.Discontinued = discontinued;
-                        }
-                        else
-                        {
-                            discontinued = false;
-                            product.Discontinued = discontinued;
-                        }
-
-                        Console.WriteLine("Enter Category Name: ");
-                        var categoryName = Console.ReadLine().ToLower();
-                        var categoryQuery = db.Categories.Where(c => c.CategoryName.Equals(categoryName));
-                        var categoryID = 0;
-
-                        foreach (var ca in categoryQuery)
-                        {
-                            categoryID = ca.CategoryId;
-                        }
-
-                        product.CategoryId = categoryID;
-
-                        Console.WriteLine("Enter Supplier name: ");
-                        var supplierName = Console.ReadLine();
-                        var supplierQuery = db.Suppliers.Where(s => s.CompanyName.Equals(supplierName));
-                        var supplierID = 0;
-
-                        foreach (var s in supplierQuery)
-                        {
-                            supplierID = s.SupplierId;
-                        }
-
-                        product.SupplierId = supplierID;
-
-                        var isProductValid = true;
-
-                        if (db.Products.Any(p => p.ProductName.ToLower() == product.ProductName))
-                        {
-                            isProductValid = false;
-                        }
-
-
-                        if (isProductValid)
-                        {
-                            db.addProduct(product);
-                            logger.Info($"Product {product.ProductName} added");
-                        }
-                        else if (!isProductValid)
-                        {
-                            logger.Error("Product already exists");
-                        }
-
+                        case "1":
+                            Product.addProducts(logger);
+                            break;
+                        case "2":
+                            Product.displayAllProducts(logger);
+                            break;
+                        case "3":
+                            Product.displayActiveProducts(logger);
+                            break;
+                        case "4":
+                            Product.displayDiscontinuedProducts(logger);
+                            break;
+                        case "5":
+                            Product.searchProducts(logger);
+                            break;
+                        default:
+                            Console.WriteLine("No option chosen");
+                            break;
                     }
-                    else if (choice == "2")
-                    {
-
-                        logger.Info("Choice: Display all products");
-                        var db = new NorthwindContext();
-
-                        var productQuery = db.Products.OrderBy(p => p.ProductID);
-                        logger.Info(productQuery.Count());
-                        foreach (var p in productQuery)
-                        {
-                            Console.WriteLine($"{p.ProductName}");
-
-                        }
-
-                        Console.WriteLine("\n\nPress any key to return to menu");
-                        Console.ReadLine();
 
 
-                    }
-                    else if (choice == "3")
-                    {
 
-                        logger.Info("Choice: Display Active Products");
-                        var db = new NorthwindContext();
+                    //if (choice == "1")
+                    //{
 
-                        Console.WriteLine("Active Products");
-                        Console.WriteLine("-----------------------");
+                    //    var db = new NorthwindContext();
 
-                        var ProductQuery = db.Products.Where(p => p.Discontinued == false);
+                    //    Product product = new Product();
 
-
-                        foreach (var p in ProductQuery)
-                        {
-
-                            Console.WriteLine($"{p.ProductName}");
-                        }
-
-                        Console.WriteLine("\n\nPress any key to return to menu");
-                        Console.ReadLine();
+                    //    logger.Info("Choice: Add new product");
+                    //    Console.WriteLine("Enter product name: ");
+                    //    product.ProductName = Console.ReadLine().ToLower();
+                    //    Console.WriteLine("Enter Quantity per unit: ");
+                    //    product.QuantityPerUnit = Console.ReadLine();
 
 
-                    }
-                    else if (choice == "4")
-                    {
 
-                        logger.Info("Choice: Display Active Products");
-                        var db = new NorthwindContext();
+                    //    Console.WriteLine("Enter unit price: ");
 
-                        Console.WriteLine("Discontinued Products");
-                        Console.WriteLine("-----------------------");
-
-                        var ProductQuery = db.Products.Where(p => p.Discontinued == true);
+                    //    Decimal unitPrice = Decimal.Parse(Console.ReadLine());
+                    //    product.UnitPrice = unitPrice;
 
 
-                        foreach (var p in ProductQuery)
-                        {
 
-                            Console.WriteLine($"{p.ProductName}");
-                        }
+                    //    Console.WriteLine("Enter units in stock: ");
+                    //    Int16 unitsInStock = Int16.Parse(Console.ReadLine());
+                    //    product.UnitsInStock = unitsInStock;
 
-                        Console.WriteLine("\n\nPress any key to return to menu");
-                        Console.ReadLine();
-                    }
-                    else if (choice == "5")
-                    {
+                    //    Console.WriteLine("Enter units on order: ");
+                    //    Int16 unitsOnOrder = Int16.Parse(Console.ReadLine());
+                    //    product.UnitsOnOrder = unitsOnOrder;
 
-                        logger.Info("Choice: Search Products");
-                        var db = new NorthwindContext();
+                    //    Console.WriteLine("Enter reorder level: ");
+                    //    Int16 reorderLevel = Int16.Parse(Console.ReadLine());
+                    //    product.ReorderLevel = reorderLevel;
 
-                        Console.WriteLine("Enter product name: ");
-                        string name = Console.ReadLine().ToLower();
+                    //    Console.WriteLine("Enter Discontinued Y/N");
+                    //    bool discontinued;
 
-                        logger.Info($"User search for {name.ToUpper()}");
+                    //    if (Console.ReadLine().Equals("T"))
+                    //    {
+                    //        discontinued = true;
+                    //        product.Discontinued = discontinued;
+                    //    }
+                    //    else
+                    //    {
+                    //        discontinued = false;
+                    //        product.Discontinued = discontinued;
+                    //    }
+
+                    //    Console.WriteLine("Enter Category Name: ");
+                    //    var categoryName = Console.ReadLine().ToLower();
+                    //    var categoryQuery = db.Categories.Where(c => c.CategoryName.Equals(categoryName));
+                    //    var categoryID = 0;
+
+                    //    foreach (var ca in categoryQuery)
+                    //    {
+                    //        categoryID = ca.CategoryId;
+                    //    }
+
+                    //    product.CategoryId = categoryID;
+
+                    //    Console.WriteLine("Enter Supplier name: ");
+                    //    var supplierName = Console.ReadLine();
+                    //    var supplierQuery = db.Suppliers.Where(s => s.CompanyName.Equals(supplierName));
+                    //    var supplierID = 0;
+
+                    //    foreach (var s in supplierQuery)
+                    //    {
+                    //        supplierID = s.SupplierId;
+                    //    }
+
+                    //    product.SupplierId = supplierID;
+
+                    //    var isProductValid = true;
+
+                    //    if (db.Products.Any(p => p.ProductName.ToLower() == product.ProductName))
+                    //    {
+                    //        isProductValid = false;
+                    //    }
 
 
-                        var searchProduct = db.Products.Where(p => p.ProductName.Equals(name));
+                    //    if (isProductValid)
+                    //    {
+                    //        db.addProduct(product);
+                    //        logger.Info($"Product {product.ProductName} added");
+                    //    }
+                    //    else if (!isProductValid)
+                    //    {
+                    //        logger.Error("Product already exists");
+                    //    }
 
-                        if (searchProduct.Any())
-                        {
+                    //}
+                    //else if (choice == "2")
+                    //{
 
-                            Console.WriteLine($"Search Results for {name.ToUpper()}");
-                            foreach (var p in searchProduct)
-                            {
-                                Console.WriteLine($"Id: {p.ProductID}");
-                                Console.WriteLine($"Quantity Per Unit: {p.QuantityPerUnit}");
-                                Console.WriteLine($"Unit Price: {p.UnitPrice}");
-                                Console.WriteLine($"Units In Stock: {p.UnitsInStock}");
-                                Console.WriteLine($"Units On Order: {p.UnitsOnOrder}");
-                                Console.WriteLine($"Reorder Level: {p.ReorderLevel}");
-                                Console.WriteLine($"Discontinued: {p.Discontinued}");
-                                Console.WriteLine("---------------------");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"There were {searchProduct.Count()} products that matched \"{name.ToUpper()}\"");
-                        }
-                        Console.WriteLine();
-                        Console.WriteLine("Press any key to return to menu");
-                        Console.ReadLine();
-                    }
+                    //    logger.Info("Choice: Display all products");
+                    //    var db = new NorthwindContext();
+
+                    //    var productQuery = db.Products.OrderBy(p => p.ProductID);
+                    //    logger.Info(productQuery.Count());
+                    //    foreach (var p in productQuery)
+                    //    {
+                    //        Console.WriteLine($"{p.ProductName}");
+
+                    //    }
+
+                    //    Console.WriteLine("\n\nPress any key to return to menu");
+                    //    Console.ReadLine();
+
+
+                    //}
+                    //else if (choice == "3")
+                    //{
+
+                    //    logger.Info("Choice: Display Active Products");
+                    //    var db = new NorthwindContext();
+
+                    //    Console.WriteLine("Active Products");
+                    //    Console.WriteLine("-----------------------");
+
+                    //    var ProductQuery = db.Products.Where(p => p.Discontinued == false);
+
+
+                    //    foreach (var p in ProductQuery)
+                    //    {
+
+                    //        Console.WriteLine($"{p.ProductName}");
+                    //    }
+
+                    //    Console.WriteLine("\n\nPress any key to return to menu");
+                    //    Console.ReadLine();
+
+
+                    //}
+                    //else if (choice == "4")
+                    //{
+
+                    //    logger.Info("Choice: Display Discontinued Products");
+                    //    var db = new NorthwindContext();
+
+                    //    Console.WriteLine("Discontinued Products");
+                    //    Console.WriteLine("-----------------------");
+
+                    //    var ProductQuery = db.Products.Where(p => p.Discontinued == true);
+
+
+                    //    foreach (var p in ProductQuery)
+                    //    {
+
+                    //        Console.WriteLine($"{p.ProductName}");
+                    //    }
+
+                    //    Console.WriteLine("\n\nPress any key to return to menu");
+                    //    Console.ReadLine();
+                    //}
+                    //else if (choice == "5")
+                    //{
+
+                    //    logger.Info("Choice: Search Products");
+                    //    var db = new NorthwindContext();
+
+                    //    Console.WriteLine("Enter product name: ");
+                    //    string name = Console.ReadLine().ToLower();
+
+                    //    logger.Info($"User search for {name.ToUpper()}");
+
+
+                    //    var searchProduct = db.Products.Where(p => p.ProductName.Equals(name));
+
+                    //    if (searchProduct.Any())
+                    //    {
+
+                    //        Console.WriteLine($"Search Results for {name.ToUpper()}");
+                    //        foreach (var p in searchProduct)
+                    //        {
+                    //            Console.WriteLine($"Id: {p.ProductID}");
+                    //            Console.WriteLine($"Quantity Per Unit: {p.QuantityPerUnit}");
+                    //            Console.WriteLine($"Unit Price: {p.UnitPrice}");
+                    //            Console.WriteLine($"Units In Stock: {p.UnitsInStock}");
+                    //            Console.WriteLine($"Units On Order: {p.UnitsOnOrder}");
+                    //            Console.WriteLine($"Reorder Level: {p.ReorderLevel}");
+                    //            Console.WriteLine($"Discontinued: {p.Discontinued}");
+                    //            Console.WriteLine("---------------------");
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        Console.WriteLine($"There were {searchProduct.Count()} products that matched \"{name.ToUpper()}\"");
+                    //    }
+                    //    Console.WriteLine();
+                    //    Console.WriteLine("Press any key to return to menu");
+                    //    Console.ReadLine();
+                    //}
 
 
 
