@@ -89,7 +89,7 @@ namespace NorthwindConsole.Models
             Console.ReadLine();
         }
 
-        public static void displayCategoriesDiscontinued(Logger logger)
+        public static void displayAllCategoriesAndProductsNotDiscontinued(Logger logger)
         {
 
             logger.Info("Choice: Display non-discontinued products by category");
@@ -123,6 +123,61 @@ namespace NorthwindConsole.Models
             Console.WriteLine();
             Console.WriteLine("Press any key to return to menu");
             Console.ReadLine();
+        }
+
+        public static void displaySpecificCategoryAndProducts(Logger logger)
+        {
+            logger.Info("Choice: Display specific category and products");
+            var db = new NorthwindContext();
+
+            Console.WriteLine("Enter category Id to view products: ");
+
+            var categories = db.Categories.OrderBy(c => c.CategoryId);
+
+            foreach (var c in categories)
+            {
+                Console.WriteLine($"{c.CategoryId}) {c.CategoryName}");
+            }
+
+            if (UInt32.TryParse(Console.ReadLine(), out UInt32 choice))
+            {
+                if (db.Categories.Any(c => c.CategoryId == choice))
+                {
+                    var specificCategory = (from p in db.Products
+                                            join c in db.Categories
+                                            on p.CategoryId equals c.CategoryId
+                                            where p.Discontinued == false && c.CategoryId == choice
+                                            select new
+                                            {
+                                                c.CategoryName,
+                                                p.ProductName
+
+                                            }).ToList();
+
+
+                    logger.Info($"({specificCategory.Count()}) results returned");
+                    Console.WriteLine();
+
+                    foreach (var cat in specificCategory)
+                    {
+                        Console.WriteLine($"{cat.CategoryName}, {cat.ProductName}");
+                    }
+                }
+                else
+                {
+                    logger.Error($"Category Id {choice} does not exist");
+                }
+            }
+            else
+            {
+                logger.Error("Not a valid entry");
+            }
+
+
+            Console.WriteLine();
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+
         }
 
         public static Category InputCategory(NorthwindContext db)
