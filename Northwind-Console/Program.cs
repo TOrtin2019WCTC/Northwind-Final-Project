@@ -195,13 +195,15 @@ namespace NorthwindConsole
                         Console.WriteLine("Enter product name: ");
                         string name = Console.ReadLine().ToLower();
 
+                        logger.Info($"User search for {name.ToUpper()}");
+
 
                         var searchProduct = db.Products.Where(p => p.ProductName.Equals(name));
 
                         if (searchProduct.Any())
                         {
 
-                            Console.WriteLine($"Search Resuts for {name.ToUpper()}");
+                            Console.WriteLine($"Search Results for {name.ToUpper()}");
                             foreach (var p in searchProduct)
                             {
                                 Console.WriteLine($"Id: {p.ProductID}");
