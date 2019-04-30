@@ -24,6 +24,7 @@ namespace NorthwindConsole
                     Console.WriteLine("3) Display Active Products");
                     Console.WriteLine("4) Display Discontinued Products");
                     Console.WriteLine("5) Search Products");
+                    Console.WriteLine("6) Add Category");
                     //Console.WriteLine("2) Add Category");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
@@ -44,6 +45,9 @@ namespace NorthwindConsole
                             break;
                         case "5":
                             Product.searchProducts(logger);
+                            break;
+                        case "6":
+                            Category.addCategories(logger);
                             break;
                         default:
                             Console.WriteLine("No option chosen");

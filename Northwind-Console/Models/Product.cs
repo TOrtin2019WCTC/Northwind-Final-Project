@@ -80,60 +80,67 @@ namespace NorthwindConsole.Models
             product.ReorderLevel = reorderLevel;
 
             Console.WriteLine("Enter Discontinued Y/N");
+            string disc = Console.ReadLine().ToLower();
             bool discontinued;
 
-            if (Console.ReadLine().Equals("T"))
+            if (disc != null && disc.Equals("y") || disc.Equals("n"))
             {
-                discontinued = true;
-                product.Discontinued = discontinued;
+                if (disc.Equals("y"))
+                {
+                    discontinued = true;
+                    product.Discontinued = discontinued;
+                }
+                else if (disc.Equals("n"))
+                {
+                    discontinued = false;
+                    product.Discontinued = discontinued;
+                }
+
+
+                Console.WriteLine("Enter Category Name: ");
+                var categoryName = Console.ReadLine().ToLower();
+                var categoryQuery = db.Categories.Where(c => c.CategoryName.Equals(categoryName));
+                var categoryID = 0;
+
+                foreach (var ca in categoryQuery)
+                {
+                    categoryID = ca.CategoryId;
+                }
+
+                product.CategoryId = categoryID;
+
+                Console.WriteLine("Enter Supplier name: ");
+                var supplierName = Console.ReadLine();
+                var supplierQuery = db.Suppliers.Where(s => s.CompanyName.Equals(supplierName));
+                var supplierID = 0;
+
+                foreach (var s in supplierQuery)
+                {
+                    supplierID = s.SupplierId;
+                }
+
+                product.SupplierId = supplierID;
+
+                var isProductValid = true;
+
+                if (db.Products.Any(p => p.ProductName.ToLower() == product.ProductName))
+                {
+                    isProductValid = false;
+                }
+
+
+                if (isProductValid)
+                {
+                    db.addProduct(product);
+                    logger.Info($"Product {product.ProductName} added");
+                }
+                else if (!isProductValid)
+                {
+                    logger.Error("Product already exists");
+                }
             }
-            else
-            {
-                discontinued = false;
-                product.Discontinued = discontinued;
-            }
-
-            Console.WriteLine("Enter Category Name: ");
-            var categoryName = Console.ReadLine().ToLower();
-            var categoryQuery = db.Categories.Where(c => c.CategoryName.Equals(categoryName));
-            var categoryID = 0;
-
-            foreach (var ca in categoryQuery)
-            {
-                categoryID = ca.CategoryId;
-            }
-
-            product.CategoryId = categoryID;
-
-            Console.WriteLine("Enter Supplier name: ");
-            var supplierName = Console.ReadLine();
-            var supplierQuery = db.Suppliers.Where(s => s.CompanyName.Equals(supplierName));
-            var supplierID = 0;
-
-            foreach (var s in supplierQuery)
-            {
-                supplierID = s.SupplierId;
-            }
-
-            product.SupplierId = supplierID;
-
-            var isProductValid = true;
-
-            if (db.Products.Any(p => p.ProductName.ToLower() == product.ProductName))
-            {
-                isProductValid = false;
-            }
 
 
-            if (isProductValid)
-            {
-                db.addProduct(product);
-                logger.Info($"Product {product.ProductName} added");
-            }
-            else if (!isProductValid)
-            {
-                logger.Error("Product already exists");
-            }
 
         }
 

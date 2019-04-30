@@ -15,5 +15,11 @@ namespace NorthwindConsole.Models
             this.Products.Add(product);
             this.SaveChanges();
         }
+
+        public void addCategory(Category category)
+        {
+            this.Categories.Add(category);
+            this.SaveChanges();
+        }
     }
 }
