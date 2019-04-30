@@ -26,6 +26,7 @@ namespace NorthwindConsole
                     Console.WriteLine("5) Search Products");
                     Console.WriteLine("6) Add Category");
                     Console.WriteLine("7) Edit Category");
+                    Console.WriteLine("8) Display all Categories");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
 
@@ -73,6 +74,9 @@ namespace NorthwindConsole
                             Console.WriteLine();
                             Console.WriteLine("Press any key to return to menu");
                             Console.ReadLine();
+                            break;
+                        case "8":
+                            Category.displayAllCategories(logger);
                             break;
                         default:
                             Console.WriteLine("No option chosen");

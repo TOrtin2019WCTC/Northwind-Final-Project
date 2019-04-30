@@ -68,46 +68,25 @@ namespace NorthwindConsole.Models
 
         }
 
-        //public static void editCategory(Logger logger)
-        //{
-        //    var db = new NorthwindContext();
+        public static void displayAllCategories(Logger logger)
+        {
+            logger.Info("Choice: Display All Categories");
+            Console.WriteLine();
+            var db = new NorthwindContext();
 
-        //    Console.WriteLine("Enter category Name");
-        //    var name = Console.ReadLine().ToLower();
+            var categories = db.Categories.OrderBy(c => c.CategoryId);
 
-        //    var categorySearch = db.Categories.Where(c => c.CategoryName.ToLower().Equals(name));
+            foreach (var item in categories)
+            {
+                Console.WriteLine($"Name: {item.CategoryName}");
+                Console.WriteLine($"Description: {item.Description}");
+                Console.WriteLine("-------------------------");
+            }
 
-        //    if (categorySearch.Any())
-        //    {
-        //        string ans;
-        //        do
-        //        {
-        //            Console.WriteLine("1) to edit name");
-        //            Console.WriteLine("2) to edit description");
-        //            Console.WriteLine("\"q\" to return to main menu");
-        //            ans = Console.ReadLine();
-
-        //            switch (ans)
-        //            {
-
-        //            }
-
-
-        //            foreach (var item in categorySearch)
-        //            {
-
-        //            }
-        //        } while (ans != "q");
-
-        //    }
-
-
-        //    else
-        //    {
-        //        logger.Error($"{name} not found in database");
-        //    }
-
-        //}
+            Console.WriteLine();
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+        }
 
         public static Category InputCategory(NorthwindContext db)
         {
