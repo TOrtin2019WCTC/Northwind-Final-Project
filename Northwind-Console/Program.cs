@@ -18,12 +18,17 @@ namespace NorthwindConsole
                 string choice;
                 do
                 {
-                    //Console.Clear();
+                    Console.Clear();
                     Console.WriteLine("1) Add Product");
                     Console.WriteLine("2) Display all Products");
+                    Console.WriteLine("3) Display Active Products");
+                    Console.WriteLine("4) Display Discontinued Products");
+                    Console.WriteLine("5) Search Products");
                     //Console.WriteLine("2) Add Category");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
+
+
 
 
 
@@ -99,17 +104,12 @@ namespace NorthwindConsole
 
                         product.SupplierId = supplierID;
 
-                        var isProductValid = false;
+                        var isProductValid = true;
 
                         if (db.Products.Any(p => p.ProductName.ToLower() == product.ProductName))
                         {
                             isProductValid = false;
                         }
-                        else
-                        {
-                            isProductValid = true;
-                        }
-
 
 
                         if (isProductValid)
@@ -117,7 +117,7 @@ namespace NorthwindConsole
                             db.addProduct(product);
                             logger.Info($"Product {product.ProductName} added");
                         }
-                        else
+                        else if (!isProductValid)
                         {
                             logger.Error("Product already exists");
                         }
@@ -130,14 +130,100 @@ namespace NorthwindConsole
                         var db = new NorthwindContext();
 
                         var productQuery = db.Products.OrderBy(p => p.ProductID);
-
+                        logger.Info(productQuery.Count());
                         foreach (var p in productQuery)
                         {
-                            Console.WriteLine($"ID: {p.ProductID}");
-                            Console.WriteLine($"Name: {p.ProductName}");
-                            Console.WriteLine("\n");
+                            Console.WriteLine($"{p.ProductName}");
+
                         }
+
+                        Console.WriteLine("\n\nPress any key to return to menu");
+                        Console.ReadLine();
+
+
                     }
+                    else if (choice == "3")
+                    {
+
+                        logger.Info("Choice: Display Active Products");
+                        var db = new NorthwindContext();
+
+                        Console.WriteLine("Active Products");
+                        Console.WriteLine("-----------------------");
+
+                        var ProductQuery = db.Products.Where(p => p.Discontinued == false);
+
+
+                        foreach (var p in ProductQuery)
+                        {
+
+                            Console.WriteLine($"{p.ProductName}");
+                        }
+
+                        Console.WriteLine("\n\nPress any key to return to menu");
+                        Console.ReadLine();
+
+
+                    }
+                    else if (choice == "4")
+                    {
+
+                        logger.Info("Choice: Display Active Products");
+                        var db = new NorthwindContext();
+
+                        Console.WriteLine("Discontinued Products");
+                        Console.WriteLine("-----------------------");
+
+                        var ProductQuery = db.Products.Where(p => p.Discontinued == true);
+
+
+                        foreach (var p in ProductQuery)
+                        {
+
+                            Console.WriteLine($"{p.ProductName}");
+                        }
+
+                        Console.WriteLine("\n\nPress any key to return to menu");
+                        Console.ReadLine();
+                    }
+                    else if (choice == "5")
+                    {
+
+                        logger.Info("Choice: Search Products");
+                        var db = new NorthwindContext();
+
+                        Console.WriteLine("Enter product name: ");
+                        string name = Console.ReadLine().ToLower();
+
+
+                        var searchProduct = db.Products.Where(p => p.ProductName.Equals(name));
+
+                        if (searchProduct.Any())
+                        {
+
+                            Console.WriteLine($"Search Resuts for {name.ToUpper()}");
+                            foreach (var p in searchProduct)
+                            {
+                                Console.WriteLine($"Id: {p.ProductID}");
+                                Console.WriteLine($"Quantity Per Unit: {p.QuantityPerUnit}");
+                                Console.WriteLine($"Unit Price: {p.UnitPrice}");
+                                Console.WriteLine($"Units In Stock: {p.UnitsInStock}");
+                                Console.WriteLine($"Units On Order: {p.UnitsOnOrder}");
+                                Console.WriteLine($"Reorder Level: {p.ReorderLevel}");
+                                Console.WriteLine($"Discontinued: {p.Discontinued}");
+                                Console.WriteLine("---------------------");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"There were {searchProduct.Count()} products that matched \"{name.ToUpper()}\"");
+                        }
+                        Console.WriteLine();
+                        Console.WriteLine("Press any key to return to menu");
+                        Console.ReadLine();
+                    }
+
+
 
 
 
