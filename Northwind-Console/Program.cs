@@ -27,6 +27,7 @@ namespace NorthwindConsole
                     Console.WriteLine("6) Add Category");
                     Console.WriteLine("7) Edit Category");
                     Console.WriteLine("8) Display all Categories");
+                    Console.WriteLine("9) Display all non discontinued items by Category");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
 
@@ -77,6 +78,9 @@ namespace NorthwindConsole
                             break;
                         case "8":
                             Category.displayAllCategories(logger);
+                            break;
+                        case "9":
+                            Category.displayCategoriesDiscontinued(logger);
                             break;
                         default:
                             Console.WriteLine("No option chosen");

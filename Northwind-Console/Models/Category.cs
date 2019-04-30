@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -82,6 +83,42 @@ namespace NorthwindConsole.Models
                 Console.WriteLine($"Description: {item.Description}");
                 Console.WriteLine("-------------------------");
             }
+
+            Console.WriteLine();
+            Console.WriteLine("Press any key to return to menu");
+            Console.ReadLine();
+        }
+
+        public static void displayCategoriesDiscontinued(Logger logger)
+        {
+
+            logger.Info("Choice: Display non-discontinued products by category");
+            Console.WriteLine();
+            var db = new NorthwindContext();
+
+            var categories = (from p in db.Products
+                              join c in db.Categories
+                              on p.CategoryId equals c.CategoryId
+                              where p.Discontinued == false
+                              orderby c.CategoryId
+
+                              select new
+                              {
+                                  c.CategoryId,
+                                  c.CategoryName,
+                                  p.ProductName
+                              }).ToList();
+
+
+
+            foreach (var item in categories)
+            {
+
+                Console.WriteLine($"{item.CategoryName}, {item.ProductName}");
+
+            }
+
+            logger.Info(categories.Count());
 
             Console.WriteLine();
             Console.WriteLine("Press any key to return to menu");
