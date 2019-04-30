@@ -67,5 +67,92 @@ namespace NorthwindConsole.Models
 
 
         }
+
+        //public static void editCategory(Logger logger)
+        //{
+        //    var db = new NorthwindContext();
+
+        //    Console.WriteLine("Enter category Name");
+        //    var name = Console.ReadLine().ToLower();
+
+        //    var categorySearch = db.Categories.Where(c => c.CategoryName.ToLower().Equals(name));
+
+        //    if (categorySearch.Any())
+        //    {
+        //        string ans;
+        //        do
+        //        {
+        //            Console.WriteLine("1) to edit name");
+        //            Console.WriteLine("2) to edit description");
+        //            Console.WriteLine("\"q\" to return to main menu");
+        //            ans = Console.ReadLine();
+
+        //            switch (ans)
+        //            {
+
+        //            }
+
+
+        //            foreach (var item in categorySearch)
+        //            {
+
+        //            }
+        //        } while (ans != "q");
+
+        //    }
+
+
+        //    else
+        //    {
+        //        logger.Error($"{name} not found in database");
+        //    }
+
+        //}
+
+        public static Category InputCategory(NorthwindContext db)
+        {
+            Category category = new Category();
+
+            Console.WriteLine("Enter Category Name: ");
+            category.CategoryName = Console.ReadLine();
+
+            Console.WriteLine("Enter description: ");
+            category.Description = Console.ReadLine();
+
+            if (category.CategoryName != null && category.Description != null)
+            {
+                return category;
+            }
+            else
+            {
+                Console.WriteLine("name and description cannot be empty");
+            }
+
+            return null;
+
+
+        }
+
+        public static Category GetCategory(NorthwindContext db)
+        {
+            var categories = db.Categories.OrderBy(c => c.CategoryId);
+
+            foreach (Category c in categories)
+            {
+                Console.WriteLine($"ID: {c.CategoryId}) Name: {c.CategoryName}");
+            }
+
+            if (int.TryParse(Console.ReadLine(), out int CategoryId))
+            {
+                Category category = db.Categories.FirstOrDefault(c => c.CategoryId == CategoryId);
+                if (category != null)
+                {
+                    return category;
+                }
+
+            }
+            Console.WriteLine("Invalid category id");
+            return null;
+        }
     }
 }

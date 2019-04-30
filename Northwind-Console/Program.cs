@@ -25,7 +25,7 @@ namespace NorthwindConsole
                     Console.WriteLine("4) Display Discontinued Products");
                     Console.WriteLine("5) Search Products");
                     Console.WriteLine("6) Add Category");
-                    //Console.WriteLine("2) Add Category");
+                    Console.WriteLine("7) Edit Category");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
 
@@ -48,6 +48,31 @@ namespace NorthwindConsole
                             break;
                         case "6":
                             Category.addCategories(logger);
+                            break;
+                        case "7":
+
+                            var db = new NorthwindContext();
+
+                            Console.WriteLine("Choose category ID to edit: ");
+
+                            var category = Category.GetCategory(db);
+
+
+                            if (category != null)
+                            {
+                                Category UpdatedCategory = Category.InputCategory(db);
+
+                                if (UpdatedCategory != null)
+                                {
+                                    UpdatedCategory.CategoryId = category.CategoryId;
+                                    db.EditCategory(UpdatedCategory);
+                                    logger.Info($"Category Id: {UpdatedCategory.CategoryId} updated");
+                                }
+                            }
+
+                            Console.WriteLine();
+                            Console.WriteLine("Press any key to return to menu");
+                            Console.ReadLine();
                             break;
                         default:
                             Console.WriteLine("No option chosen");
@@ -261,5 +286,8 @@ namespace NorthwindConsole
             }
             logger.Info("Program ended");
         }
+
+
+
     }
 }
