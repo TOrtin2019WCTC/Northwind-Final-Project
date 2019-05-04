@@ -29,11 +29,13 @@ namespace NorthwindConsole
                     Console.WriteLine("8) Display all Categories");
                     Console.WriteLine("9) Display all non-discontinued items by Category");
                     Console.WriteLine("10) Display all non-discontinued items by speciic Category");
+                    Console.WriteLine("11) Delete Category");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
 
                     switch (choice)
                     {
+
                         case "1":
                             Product.addProducts(logger);
                             break;
@@ -58,12 +60,12 @@ namespace NorthwindConsole
 
                             Console.WriteLine("Choose category ID to edit: ");
 
-                            var category = Category.GetCategory(db);
+                            var category = Category.GetCategory(db, logger);
 
 
                             if (category != null)
                             {
-                                Category UpdatedCategory = Category.InputCategory(db);
+                                Category UpdatedCategory = Category.InputCategory(db, logger);
 
                                 if (UpdatedCategory != null)
                                 {
@@ -85,6 +87,27 @@ namespace NorthwindConsole
                             break;
                         case "10":
                             Category.displaySpecificCategoryAndProducts(logger);
+                            break;
+                        case "11":
+                            db = new NorthwindContext();
+                            Console.WriteLine("Select category to delete");
+                            var categoryToDelete = Category.GetCategory(db, logger);
+                            try
+                            {
+                                db.deleteCategory(categoryToDelete);
+                                logger.Info($"{categoryToDelete.CategoryName} deleted");
+                            }
+                            catch (Exception e)
+                            {
+                                logger.Error("Cannot Delete a record that affects other tables");
+                            }
+
+
+
+                            Console.WriteLine();
+                            Console.WriteLine("Press any key to return to menu");
+                            Console.ReadLine();
+
                             break;
                         default:
                             Console.WriteLine("No option chosen");

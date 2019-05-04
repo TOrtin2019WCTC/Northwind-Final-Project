@@ -11,6 +11,7 @@ namespace NorthwindConsole.Models
     {
         public int CategoryId { get; set; }
         [Required(ErrorMessage = "Must provide a category name")]
+        [RegularExpression(@"^\S*$", ErrorMessage = "No white space allowed")]
         public string CategoryName { get; set; }
         [Required(ErrorMessage = "Must provide description")]
         public string Description { get; set; }
@@ -29,38 +30,64 @@ namespace NorthwindConsole.Models
             Console.WriteLine("Enter Category Name: ");
             category.CategoryName = Console.ReadLine();
 
+            Console.WriteLine("Enter Description: ");
+            category.Description = Console.ReadLine();
+
+            ValidationContext context = new ValidationContext(category, null, null);
+            List<ValidationResult> results = new List<ValidationResult>();
+
+            var isValid = Validator.TryValidateObject(category, context, results, true);
+
             bool validName;
 
-            if (category.CategoryName.Contains(" "))
+            //if (category.CategoryName.Contains(" "))
+            //{
+            //logger.Error("Name cannot contain spaces");
+            //results.Add(new ValidationResult("Category name cannot contain spaces", new string[] { category.CategoryName }));
+            //isValid = false;
+            validName = false;
+            //}
+            if (db.Categories.Any(c => c.CategoryName.ToLower().Equals(category.CategoryName.ToLower())))
             {
-                logger.Error("Name cannot contain spaces");
-                validName = false;
+                isValid = false;
+                results.Add(new ValidationResult("Category already exists", new string[] { category.CategoryName }));
+                //validName = false;
+                //logger.Error($"\"{category.CategoryName}\" already exists in database");
             }
-            else if (db.Categories.Any(c => c.CategoryName.ToLower().Equals(category.CategoryName.ToLower())))
+            //else
+            //{
+            //    validName = true;
+            //}
+
+            //if (validName)
+            //{
+
+
+            if (isValid)
             {
-                validName = false;
-                logger.Error($"\"{category.CategoryName}\" already exists in database");
+                logger.Info("Validation Passed");
+                db.addCategory(category);
+                logger.Info($"{category.CategoryName} Added");
+
             }
-            else
+            else if (!isValid)
             {
-                validName = true;
+                foreach (var result in results)
+                {
+                    logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+                }
             }
 
-            if (validName)
-            {
-                Console.WriteLine("Enter Description: ");
-                category.Description = Console.ReadLine();
-
-                if (category.Description != null)
-                {
-                    db.addCategory(category);
-                    logger.Info($"{category.CategoryName} Added");
-                }
-                else
-                {
-                    logger.Error("Description cannot be null");
-                }
-            }
+            //if (category.Description != null)
+            //{
+            //db.addCategory(category);
+            //logger.Info($"{category.CategoryName} Added");
+            //}
+            //else
+            //{
+            //    logger.Error("Description cannot be null");
+            //}
+            //}
 
             Console.WriteLine();
             Console.WriteLine("Press any key to return to menu");
@@ -180,7 +207,7 @@ namespace NorthwindConsole.Models
 
         }
 
-        public static Category InputCategory(NorthwindContext db)
+        public static Category InputCategory(NorthwindContext db, Logger logger)
         {
             Category category = new Category();
 
@@ -196,7 +223,7 @@ namespace NorthwindConsole.Models
             }
             else
             {
-                Console.WriteLine("name and description cannot be empty");
+                logger.Error("name and description cannot be empty");
             }
 
             return null;
@@ -204,7 +231,7 @@ namespace NorthwindConsole.Models
 
         }
 
-        public static Category GetCategory(NorthwindContext db)
+        public static Category GetCategory(NorthwindContext db, Logger logger)
         {
             var categories = db.Categories.OrderBy(c => c.CategoryId);
 
@@ -222,7 +249,7 @@ namespace NorthwindConsole.Models
                 }
 
             }
-            Console.WriteLine("Invalid category id");
+            logger.Error("Invalid category id");
             return null;
         }
     }

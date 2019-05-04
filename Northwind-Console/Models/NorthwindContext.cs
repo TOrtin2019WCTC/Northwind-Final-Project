@@ -29,5 +29,13 @@ namespace NorthwindConsole.Models
             category.Description = UpdatedCategory.Description;
             this.SaveChanges();
         }
+
+        public void deleteCategory(Category category)
+        {
+            this.Categories.Remove(category);
+
+            this.SaveChanges();
+
+        }
     }
 }

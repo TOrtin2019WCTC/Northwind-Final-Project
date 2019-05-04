@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using NLog;
@@ -15,10 +16,18 @@ namespace NorthwindConsole.Models
         [Required(ErrorMessage = "ENTER QUANTITY PER UNIT")]
         public string QuantityPerUnit { get; set; }
         [Required(ErrorMessage = "ENTER UNIT PRICE")]
+        [RegularExpression(@"^\d+\.\d{0,2}$")]
+        [Range(-9999999999999999.99, 9999999999999999.99)]
         public decimal? UnitPrice { get; set; }
+        [Required(ErrorMessage = "ENTER UNITS IN STOCK")]
+        [Range(0, int.MaxValue, ErrorMessage = "ENTER A VALID NUMBER")]
         public Int16? UnitsInStock { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "ENTER A VALID NUMBER")]
         public Int16? UnitsOnOrder { get; set; }
+        [Required(ErrorMessage = "ENTER REORDER LEVEL")]
+        [Range(0, int.MaxValue, ErrorMessage = "ENTER A VALID NUMBER")]
         public Int16? ReorderLevel { get; set; }
+        [Required(ErrorMessage = "ENTER Y/N FOR DISCONTINUED")]
         public bool Discontinued { get; set; }
 
         public int? CategoryId { get; set; }
@@ -121,22 +130,36 @@ namespace NorthwindConsole.Models
 
                 product.SupplierId = supplierID;
 
-                var isProductValid = true;
+                ValidationContext context = new ValidationContext(product, null, null);
+                List<ValidationResult> results = new List<ValidationResult>();
+
+                var isValid = Validator.TryValidateObject(product, context, results, true);
+
+                //var isProductValid = true;
 
                 if (db.Products.Any(p => p.ProductName.ToLower() == product.ProductName))
                 {
-                    isProductValid = false;
+                    //isProductValid = false;
+                    isValid = false;
+                    results.Add(new ValidationResult("Product already exists", new string[] { product.ProductName }));
+
+
                 }
 
 
-                if (isProductValid)
+                if (isValid)
                 {
+                    logger.Info("Validation Passed");
                     db.addProduct(product);
                     logger.Info($"Product {product.ProductName} added");
                 }
-                else if (!isProductValid)
+                else if (!isValid)
                 {
-                    logger.Error("Product already exists");
+                    foreach (var result in results)
+                    {
+                        logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
+                    }
+                    //logger.Error("Product already exists");
                 }
             }
 
