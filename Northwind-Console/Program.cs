@@ -24,207 +24,118 @@ namespace NorthwindConsole
                     Console.WriteLine("3) Display Active Products");
                     Console.WriteLine("4) Display Discontinued Products");
                     Console.WriteLine("5) Search Products");
-                    //Console.WriteLine("2) Add Category");
+                    Console.WriteLine("6) Add Category");
+                    Console.WriteLine("7) Edit Category");
+                    Console.WriteLine("8) Display all Categories");
+                    Console.WriteLine("9) Display all non-discontinued items by Category");
+                    Console.WriteLine("10) Display all non-discontinued items by speciic Category");
+                    Console.WriteLine("11) Delete Category");
+                    Console.WriteLine("12) Delete Product");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
 
-
-
-
-
-                    if (choice == "1")
+                    switch (choice)
                     {
 
-                        var db = new NorthwindContext();
+                        case "1":
+                            Product.addProducts(logger);
+                            break;
+                        case "2":
+                            Product.displayAllProducts(logger);
+                            break;
+                        case "3":
+                            Product.displayActiveProducts(logger);
+                            break;
+                        case "4":
+                            Product.displayDiscontinuedProducts(logger);
+                            break;
+                        case "5":
+                            Product.searchProducts(logger);
+                            break;
+                        case "6":
+                            Category.addCategories(logger);
+                            break;
+                        case "7":
 
-                        Product product = new Product();
+                            var db = new NorthwindContext();
 
-                        logger.Info("Choice: Add new product");
-                        Console.WriteLine("Enter product name: ");
-                        product.ProductName = Console.ReadLine().ToLower();
-                        Console.WriteLine("Enter Quantity per unit: ");
-                        product.QuantityPerUnit = Console.ReadLine();
+                            Console.WriteLine("Choose category ID to edit: ");
 
-
-
-                        Console.WriteLine("Enter unit price: ");
-
-                        Decimal unitPrice = Decimal.Parse(Console.ReadLine());
-                        product.UnitPrice = unitPrice;
-
-
-
-                        Console.WriteLine("Enter units in stock: ");
-                        Int16 unitsInStock = Int16.Parse(Console.ReadLine());
-                        product.UnitsInStock = unitsInStock;
-
-                        Console.WriteLine("Enter units on order: ");
-                        Int16 unitsOnOrder = Int16.Parse(Console.ReadLine());
-                        product.UnitsOnOrder = unitsOnOrder;
-
-                        Console.WriteLine("Enter reorder level: ");
-                        Int16 reorderLevel = Int16.Parse(Console.ReadLine());
-                        product.ReorderLevel = reorderLevel;
-
-                        Console.WriteLine("Enter Discontinued Y/N");
-                        bool discontinued;
-
-                        if (Console.ReadLine().Equals("T"))
-                        {
-                            discontinued = true;
-                            product.Discontinued = discontinued;
-                        }
-                        else
-                        {
-                            discontinued = false;
-                            product.Discontinued = discontinued;
-                        }
-
-                        Console.WriteLine("Enter Category Name: ");
-                        var categoryName = Console.ReadLine().ToLower();
-                        var categoryQuery = db.Categories.Where(c => c.CategoryName.Equals(categoryName));
-                        var categoryID = 0;
-
-                        foreach (var ca in categoryQuery)
-                        {
-                            categoryID = ca.CategoryId;
-                        }
-
-                        product.CategoryId = categoryID;
-
-                        Console.WriteLine("Enter Supplier name: ");
-                        var supplierName = Console.ReadLine();
-                        var supplierQuery = db.Suppliers.Where(s => s.CompanyName.Equals(supplierName));
-                        var supplierID = 0;
-
-                        foreach (var s in supplierQuery)
-                        {
-                            supplierID = s.SupplierId;
-                        }
-
-                        product.SupplierId = supplierID;
-
-                        var isProductValid = true;
-
-                        if (db.Products.Any(p => p.ProductName.ToLower() == product.ProductName))
-                        {
-                            isProductValid = false;
-                        }
+                            var category = Category.GetCategory(db, logger);
 
 
-                        if (isProductValid)
-                        {
-                            db.addProduct(product);
-                            logger.Info($"Product {product.ProductName} added");
-                        }
-                        else if (!isProductValid)
-                        {
-                            logger.Error("Product already exists");
-                        }
-
-                    }
-                    else if (choice == "2")
-                    {
-
-                        logger.Info("Choice: Display all products");
-                        var db = new NorthwindContext();
-
-                        var productQuery = db.Products.OrderBy(p => p.ProductID);
-                        logger.Info(productQuery.Count());
-                        foreach (var p in productQuery)
-                        {
-                            Console.WriteLine($"{p.ProductName}");
-
-                        }
-
-                        Console.WriteLine("\n\nPress any key to return to menu");
-                        Console.ReadLine();
-
-
-                    }
-                    else if (choice == "3")
-                    {
-
-                        logger.Info("Choice: Display Active Products");
-                        var db = new NorthwindContext();
-
-                        Console.WriteLine("Active Products");
-                        Console.WriteLine("-----------------------");
-
-                        var ProductQuery = db.Products.Where(p => p.Discontinued == false);
-
-
-                        foreach (var p in ProductQuery)
-                        {
-
-                            Console.WriteLine($"{p.ProductName}");
-                        }
-
-                        Console.WriteLine("\n\nPress any key to return to menu");
-                        Console.ReadLine();
-
-
-                    }
-                    else if (choice == "4")
-                    {
-
-                        logger.Info("Choice: Display Active Products");
-                        var db = new NorthwindContext();
-
-                        Console.WriteLine("Discontinued Products");
-                        Console.WriteLine("-----------------------");
-
-                        var ProductQuery = db.Products.Where(p => p.Discontinued == true);
-
-
-                        foreach (var p in ProductQuery)
-                        {
-
-                            Console.WriteLine($"{p.ProductName}");
-                        }
-
-                        Console.WriteLine("\n\nPress any key to return to menu");
-                        Console.ReadLine();
-                    }
-                    else if (choice == "5")
-                    {
-
-                        logger.Info("Choice: Search Products");
-                        var db = new NorthwindContext();
-
-                        Console.WriteLine("Enter product name: ");
-                        string name = Console.ReadLine().ToLower();
-
-
-                        var searchProduct = db.Products.Where(p => p.ProductName.Equals(name));
-
-                        if (searchProduct.Any())
-                        {
-
-                            Console.WriteLine($"Search Resuts for {name.ToUpper()}");
-                            foreach (var p in searchProduct)
+                            if (category != null)
                             {
-                                Console.WriteLine($"Id: {p.ProductID}");
-                                Console.WriteLine($"Quantity Per Unit: {p.QuantityPerUnit}");
-                                Console.WriteLine($"Unit Price: {p.UnitPrice}");
-                                Console.WriteLine($"Units In Stock: {p.UnitsInStock}");
-                                Console.WriteLine($"Units On Order: {p.UnitsOnOrder}");
-                                Console.WriteLine($"Reorder Level: {p.ReorderLevel}");
-                                Console.WriteLine($"Discontinued: {p.Discontinued}");
-                                Console.WriteLine("---------------------");
+                                Category UpdatedCategory = Category.InputCategory(db, logger);
+
+                                if (UpdatedCategory != null)
+                                {
+                                    UpdatedCategory.CategoryId = category.CategoryId;
+                                    db.EditCategory(UpdatedCategory);
+                                    logger.Info($"Category Id: {UpdatedCategory.CategoryId} updated");
+                                }
                             }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"There were {searchProduct.Count()} products that matched \"{name.ToUpper()}\"");
-                        }
-                        Console.WriteLine();
-                        Console.WriteLine("Press any key to return to menu");
-                        Console.ReadLine();
+
+                            Console.WriteLine();
+                            Console.WriteLine("Press any key to return to menu");
+                            Console.ReadLine();
+                            break;
+                        case "8":
+                            Category.displayAllCategories(logger);
+                            break;
+                        case "9":
+                            Category.displayAllCategoriesAndProductsNotDiscontinued(logger);
+                            break;
+                        case "10":
+                            Category.displaySpecificCategoryAndProducts(logger);
+                            break;
+                        case "11":
+                            db = new NorthwindContext();
+                            Console.WriteLine("Select category ID to delete:");
+                            var categoryToDelete = Category.GetCategory(db, logger);
+                            try
+                            {
+                                db.deleteCategory(categoryToDelete);
+                                logger.Info($"{categoryToDelete.CategoryName} deleted");
+                            }
+                            catch (Exception)
+                            {
+                                logger.Error("Cannot Delete a record that affects other tables");
+                            }
+
+
+
+                            Console.WriteLine();
+                            Console.WriteLine("Press any key to return to menu");
+                            Console.ReadLine();
+
+                            break;
+
+                        case "12":
+                            db = new NorthwindContext();
+                            Console.WriteLine("Select product ID to delete:");
+                            var productToDelete = Product.GetProduct(db, logger);
+                            try
+                            {
+                                db.deleteProduct(productToDelete);
+                                logger.Info($"{productToDelete.ProductName} deleted");
+                            }
+                            catch (Exception)
+                            {
+                                logger.Error("Cannot Delete a record that affects other tables");
+                            }
+
+
+
+                            Console.WriteLine();
+                            Console.WriteLine("Press any key to return to menu");
+                            Console.ReadLine();
+
+                            break;
+                        default:
+                            logger.Info("No option chosen");
+                            break;
                     }
-
-
-
 
 
                 } while (choice.ToLower() != "q");
@@ -235,5 +146,8 @@ namespace NorthwindConsole
             }
             logger.Info("Program ended");
         }
+
+
+
     }
 }
