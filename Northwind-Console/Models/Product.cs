@@ -64,6 +64,7 @@ namespace NorthwindConsole.Models
             logger.Info("Choice: Add new product");
             Console.WriteLine("Enter product name: ");
             product.ProductName = Console.ReadLine().ToLower();
+
             Console.WriteLine("Enter Quantity per unit: ");
             product.QuantityPerUnit = Console.ReadLine();
 
@@ -159,7 +160,7 @@ namespace NorthwindConsole.Models
                     {
                         logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
                     }
-                    //logger.Error("Product already exists");
+
                 }
             }
 
@@ -198,7 +199,16 @@ namespace NorthwindConsole.Models
                     Console.WriteLine($"Units In Stock: {p.UnitsInStock}");
                     Console.WriteLine($"Units On Order: {p.UnitsOnOrder}");
                     Console.WriteLine($"Reorder Level: {p.ReorderLevel}");
-                    Console.WriteLine($"Discontinued: {p.Discontinued}");
+
+                    if (p.Discontinued == false)
+                    {
+                        Console.WriteLine("Discontinued: No");
+                    }
+                    else if (p.Discontinued == true)
+                    {
+                        Console.WriteLine("Discontinued: Yes");
+                    }
+                    //Console.WriteLine($"Discontinued: {p.Discontinued}");
                     Console.WriteLine("---------------------");
                 }
             }
