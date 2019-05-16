@@ -30,6 +30,7 @@ namespace NorthwindConsole
                     Console.WriteLine("9) Display all non-discontinued items by Category");
                     Console.WriteLine("10) Display all non-discontinued items by speciic Category");
                     Console.WriteLine("11) Delete Category");
+                    Console.WriteLine("12) Delete Product");
                     Console.WriteLine("\"q\" to quit");
                     choice = Console.ReadLine();
 
@@ -96,6 +97,28 @@ namespace NorthwindConsole
                             {
                                 db.deleteCategory(categoryToDelete);
                                 logger.Info($"{categoryToDelete.CategoryName} deleted");
+                            }
+                            catch (Exception e)
+                            {
+                                logger.Error("Cannot Delete a record that affects other tables");
+                            }
+
+
+
+                            Console.WriteLine();
+                            Console.WriteLine("Press any key to return to menu");
+                            Console.ReadLine();
+
+                            break;
+
+                        case "12":
+                            db = new NorthwindContext();
+                            Console.WriteLine("Select product to delete");
+                            var productToDelete = Product.GetProduct(db, logger);
+                            try
+                            {
+                                db.deleteProduct(productToDelete);
+                                logger.Info($"{productToDelete.ProductName} deleted");
                             }
                             catch (Exception e)
                             {

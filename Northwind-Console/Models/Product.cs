@@ -255,5 +255,27 @@ namespace NorthwindConsole.Models
             Console.ReadLine();
 
         }
+
+        public static Product GetProduct(NorthwindContext db, Logger logger)
+        {
+            var products = db.Products.OrderBy(c => c.ProductID);
+
+            foreach (Product p in products)
+            {
+                Console.WriteLine($"ID: {p.CategoryId}) Name: {p.ProductName}");
+            }
+
+            if (int.TryParse(Console.ReadLine(), out int ProductID))
+            {
+                Product product = db.Products.FirstOrDefault(p => p.ProductID == ProductID);
+                if (product != null)
+                {
+                    return product;
+                }
+
+            }
+            logger.Error("Invalid product id");
+            return null;
+        }
     }
 }

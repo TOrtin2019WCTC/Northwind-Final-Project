@@ -134,6 +134,7 @@ namespace NorthwindConsole.Models
                                   c.CategoryId,
                                   c.CategoryName,
                                   p.ProductName
+
                               }).ToList();
 
 

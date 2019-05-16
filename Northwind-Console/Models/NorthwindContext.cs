@@ -37,5 +37,11 @@ namespace NorthwindConsole.Models
             this.SaveChanges();
 
         }
+
+        public void deleteProduct(Product product)
+        {
+            this.Products.Remove(product);
+            this.SaveChanges();
+        }
     }
 }
