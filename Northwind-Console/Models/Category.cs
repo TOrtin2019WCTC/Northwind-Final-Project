@@ -38,29 +38,14 @@ namespace NorthwindConsole.Models
 
             var isValid = Validator.TryValidateObject(category, context, results, true);
 
-            //bool validName;
 
-            //if (category.CategoryName.Contains(" "))
-            //{
-            //logger.Error("Name cannot contain spaces");
-            //results.Add(new ValidationResult("Category name cannot contain spaces", new string[] { category.CategoryName }));
-            //isValid = false;
-            //validName = false;
-            //}
             if (db.Categories.Any(c => c.CategoryName.ToLower().Equals(category.CategoryName.ToLower())))
             {
                 isValid = false;
                 results.Add(new ValidationResult("Category already exists", new string[] { category.CategoryName }));
-                //validName = false;
-                //logger.Error($"\"{category.CategoryName}\" already exists in database");
-            }
-            //else
-            //{
-            //    validName = true;
-            //}
 
-            //if (validName)
-            //{
+            }
+
 
 
             if (isValid)
@@ -77,17 +62,6 @@ namespace NorthwindConsole.Models
                     logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
                 }
             }
-
-            //if (category.Description != null)
-            //{
-            //db.addCategory(category);
-            //logger.Info($"{category.CategoryName} Added");
-            //}
-            //else
-            //{
-            //    logger.Error("Description cannot be null");
-            //}
-            //}
 
             Console.WriteLine();
             Console.WriteLine("Press any key to return to menu");
