@@ -38,14 +38,14 @@ namespace NorthwindConsole.Models
 
             var isValid = Validator.TryValidateObject(category, context, results, true);
 
-            bool validName;
+            //bool validName;
 
             //if (category.CategoryName.Contains(" "))
             //{
             //logger.Error("Name cannot contain spaces");
             //results.Add(new ValidationResult("Category name cannot contain spaces", new string[] { category.CategoryName }));
             //isValid = false;
-            validName = false;
+            //validName = false;
             //}
             if (db.Categories.Any(c => c.CategoryName.ToLower().Equals(category.CategoryName.ToLower())))
             {
@@ -238,7 +238,7 @@ namespace NorthwindConsole.Models
 
             foreach (Category c in categories)
             {
-                Console.WriteLine($"ID: {c.CategoryId}) Name: {c.CategoryName}");
+                Console.WriteLine($"ID:{c.CategoryId}) {c.CategoryName}");
             }
 
             if (int.TryParse(Console.ReadLine(), out int CategoryId))

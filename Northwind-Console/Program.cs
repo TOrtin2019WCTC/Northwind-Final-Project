@@ -91,14 +91,14 @@ namespace NorthwindConsole
                             break;
                         case "11":
                             db = new NorthwindContext();
-                            Console.WriteLine("Select category to delete");
+                            Console.WriteLine("Select category ID to delete:");
                             var categoryToDelete = Category.GetCategory(db, logger);
                             try
                             {
                                 db.deleteCategory(categoryToDelete);
                                 logger.Info($"{categoryToDelete.CategoryName} deleted");
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
                                 logger.Error("Cannot Delete a record that affects other tables");
                             }
@@ -113,14 +113,14 @@ namespace NorthwindConsole
 
                         case "12":
                             db = new NorthwindContext();
-                            Console.WriteLine("Select product to delete");
+                            Console.WriteLine("Select product ID to delete:");
                             var productToDelete = Product.GetProduct(db, logger);
                             try
                             {
                                 db.deleteProduct(productToDelete);
                                 logger.Info($"{productToDelete.ProductName} deleted");
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
                                 logger.Error("Cannot Delete a record that affects other tables");
                             }
@@ -133,7 +133,7 @@ namespace NorthwindConsole
 
                             break;
                         default:
-                            Console.WriteLine("No option chosen");
+                            logger.Info("No option chosen");
                             break;
                     }
 

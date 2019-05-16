@@ -262,7 +262,7 @@ namespace NorthwindConsole.Models
 
             foreach (Product p in products)
             {
-                Console.WriteLine($"ID: {p.CategoryId}) Name: {p.ProductName}");
+                Console.WriteLine($"ID:{p.CategoryId}) {p.ProductName}");
             }
 
             if (int.TryParse(Console.ReadLine(), out int ProductID))
